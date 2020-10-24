@@ -16,6 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from Rekomender import views 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('create/', views.create, name='create'),
+    # path('answers/', views.answers, name='answers'),
+    # path('questionnaire/', views.questionnaire, name='questionare'),
+    # path('', views.base, name='base'),
 ]
