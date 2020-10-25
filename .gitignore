@@ -1,0 +1,14 @@
+PycharmProjects/__pycache__/
+*.pyc
+*.pyo
+.venv
+venv/
+ENV/
+.vscode
+*.sqlite3
+*.db
+*.manifest
+*.spec
+.idea
+env/
+wheels/
