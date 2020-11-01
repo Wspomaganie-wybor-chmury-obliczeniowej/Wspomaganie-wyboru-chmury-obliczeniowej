@@ -61,6 +61,13 @@ def home(request):
     #         print(choice)
     return render(request, 'Rekomender/home.html', context)
 
+# def ImportQuestionChoices():
+#     QuestionChoices QC
+#     json_data = {"questions":[{"question_text": "W jaki sposób chciałbyś się skontaktować z serwisantem/ pomocnikiem do konfiguracji?","date_added": "random","Choices": [{"text": "Telefonicznie",},{"type": "Email",}],"flag_if_multiple": 0}]}"
+#     QC.info = json.loads(json_data)
+#     QC.save()
+#     print(json_data.question[0].question_text)
+#{"questions":[{"question_text": "W jaki sposób chciałbyś się skontaktować z serwisantem/ pomocnikiem do konfiguracji?","date_added": "random","Choices": [{"text": "Telefonicznie",},{"type": "Email",}],"flag_if_multiple": 0}]}
 def create(request):
     context = {}
     return render('Rekomender/create.html', context)
