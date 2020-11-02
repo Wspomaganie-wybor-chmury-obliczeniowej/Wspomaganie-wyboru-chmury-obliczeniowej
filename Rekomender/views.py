@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import loader
 from django.http import HttpResponse
 from .models import Client, Cloud, Question, Choice, QuestionChoices
@@ -94,17 +94,29 @@ def answers(request):
 
 def questionnaire(request, question_id):
     list_object = []
-    next_question_id = int(question_id)+1
     json_data_from_db = QuestionChoices.objects.all()
     for item in json_data_from_db:
         list_object.append(item.info)
     json_data = json.loads(list_object[int(question_id)])
     if request.method == "POST":
-        context = {
-            'json_data': json_data["question"],
-            'question_id': next_question_id
-        }
-        return render(request, 'Rekomender/questionnaire.html', context)
+        next_question_id = 0
+        if 'next' in request.POST:
+            next_question_id = int(question_id)+1
+            if next_question_id >= len(list_object):
+                next_question_id = len(list_object)-1
+            context = {
+                'json_data': json_data["question"],
+                'question_id': next_question_id
+            }
+        elif 'previous' in request.POST:
+            next_question_id = int(question_id)-1
+            if next_question_id <0:
+                next_question_id = 0
+            context = {
+                'json_data': json_data["question"],
+                'question_id': next_question_id
+            }
+        return redirect('questionnaire', next_question_id)
     #paginator = Paginator(json_data["question"], 1)
 
     #page_number = request.GET.get('page')
@@ -114,7 +126,7 @@ def questionnaire(request, question_id):
     #page_obj = paginator.get_page(page_number)
     context = {
         'json_data': json_data["question"],
-        'question_id': next_question_id
+        'question_id': int(question_id)
     }
 
     return render(request,'Rekomender/questionnaire.html',context)
