@@ -1,0 +1,32 @@
+{% extends "Rekomender/base.html" %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div >
+        <div >
+            <div >
+                <h3 >Available Polls</h3>
+            </div>
+                
+            <ul >
+            
+                {%  for questionList in json_data %}
+                    
+                <li >
+                    <strong>{{ questionList.questiontext }}</strong>
+                    
+                </li>
+                    {%  for choice in questionList.Choices %}
+                    <li >
+                    <strong>{{ choice.text }}</strong>
+                    </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
