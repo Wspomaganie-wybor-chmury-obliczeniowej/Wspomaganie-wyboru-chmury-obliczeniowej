@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Rekomender.apps.RekomenderConfig',
     'widget_tweaks',
+    'jsonfield',
 ]
 
 MIDDLEWARE = [
