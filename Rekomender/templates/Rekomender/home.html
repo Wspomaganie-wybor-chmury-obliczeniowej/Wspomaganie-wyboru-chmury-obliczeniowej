@@ -11,19 +11,27 @@
             </div>
                 
             <ul >
-            
+                <form method="post" action="#">
+                {% csrf_token %}
+                <ul>
                 {%  for questionList in json_data %}
                     
                 <li >
                     <strong>{{ questionList.questiontext }}</strong>
                     
                 </li>
-                    {%  for choice in questionList.Choices %}
-                    <li >
-                    <strong>{{ choice.text }}</strong>
-                    </li>
-                    {% endfor %}
+                  
+                      {%  for choice in questionList.Choices %}
+                      <li><input type="checkbox", value="clicked", name="c{{choice.text}}" >{{choice.text}}</li>
+                     
+                      {% endfor %}
+                      <button type="submit", name="newItem", value="newItem">Add Item</button>	
+                      <input type="text", name="new">
+                      <button type="submit", name="save", value="save">Save</button>  
+                              
+                    </ul>      
                 {% endfor %}
+                </form>
             </ul>
 
         </div>
