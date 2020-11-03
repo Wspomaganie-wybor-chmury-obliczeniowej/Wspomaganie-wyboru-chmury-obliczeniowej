@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Client, Cloud, Question, Choice, QuestionChoices
 from django.core.paginator import Paginator
+from .createJsonQuestion import createQuestion
+from django.urls import reverse
 import json
 # Create your views here.
 def base(request):
@@ -13,26 +15,6 @@ def base(request):
 
     questionList = []
     ChoicesList = []
-
-    # for elem in range(0,len(json_data["question"])):
-    #     questionList.append(json_data["question"][elem]["questiontext"])
-    #     ChoicesList.append(json_data["question"][elem]["Choices"])
-    #     for text in json_data["question"][elem]["Choices"]:
-    #         print(text["text"])
-    #     print("stwrozyc graficzne pytanie")  
-    #print ([item["text"] for innerlist in ChoicesList for item in innerlist])
-
-    # for item in questionList:
-    #     #print([item["text"] for item in questionList[item]["Choices"]])
-    #     print ([item["text"] for innerlist in ChoicesList for item in innerlist])
-    
-    # template = loader.get_template('Rekomender/base.html')
-    # context = {
-    #     'latest_question_list': latest_question_list,
-    # }
-    # return HttpResponse(template.render(context, request))
-
-    #return render(request, 'Rekomender/base.html', context)
     return HttpResponse(html)
 
 def home(request):
@@ -61,54 +43,116 @@ def home(request):
     #         print(choice)
     return render(request, 'Rekomender/home.html', context)
 
-# def ImportQuestionChoices():
-#     QuestionChoices QC
-#     json_data = {"questions":[{"question_text": "W jaki sposób chciałbyś się skontaktować z serwisantem/ pomocnikiem do konfiguracji?","date_added": "random","Choices": [{"text": "Telefonicznie",},{"type": "Email",}],"flag_if_multiple": 0}]}"
-#     QC.info = json.loads(json_data)
-#     QC.save()
-#     print(json_data.question[0].question_text)
-#{"questions":[{"question_text": "W jaki sposób chciałbyś się skontaktować z serwisantem/ pomocnikiem do konfiguracji?","date_added": "random","Choices": [{"text": "Telefonicznie",},{"type": "Email",}],"flag_if_multiple": 0}]}
 def create(request):
+    if request.method == 'POST':
+        question = request.POST.get('question')
+        answers = []
+        answers.append(request.POST.get('option1'))
+        answers.append(request.POST.get('option2'))
+        answers.append(request.POST.get('option3'))
+        answers.append(request.POST.get('option4'))
+        answers.append(request.POST.get('option5'))
+        while("" in answers):
+            answers.remove("")
+        sample = QuestionChoices()
+        sample.info = createQuestion(question,answers)
+        sample.save()
     context = {}
-    return render('Rekomender/create.html', context)
+    return render(request,'Rekomender/create.html', context)
 
-def answers(request):
-    context = {}
-    response = "You're looking at the results of question %s."
-    return render('Rekomender/answers.html', context)
-
-def questionnaire(request):
-   
-
+def answers(request,question_id):
     list_object = []
-    json_data_from_db = QuestionChoices.objects.all() 
+    json_data_from_db = QuestionChoices.objects.all()
     for item in json_data_from_db:
         list_object.append(item.info)
-    data = list_object[0]
-    json_data = json.loads(data)
+    json_data = json.loads(list_object[int(question_id)])
+    context = {
+                'json_data': json_data["question"],
+                'question_id': question_id
+            }
+    return render(request, 'Rekomender/answers.html', context)
 
-    page = request.GET.get('page', 1)
-    paginator = Paginator(json_data["question"], 1)
+def questionnaire(request,question_id):
+   
 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # list_object = []
+    # json_data_from_db = QuestionChoices.objects.all() 
+    # for item in json_data_from_db:
+    #     list_object.append(item.info)
+    # data = list_object[0]
+    # json_data = json.loads(data)
+
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(json_data["question"], 1)
+
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
+    # # users = paginator.page(paginator.num_pages)
+    
+    # #page_obj = paginator.get_page(page_number)
+    # context = {
+    #     'json_data' : json_data["question"]
+    # }
+
+    # return render(request,'Rekomender/questionnaire.html',context)
+    list_object = []
+    json_data_from_db = QuestionChoices.objects.all()
+    for item in json_data_from_db:
+        list_object.append(item.info)
+    json_data = json.loads(list_object[int(question_id)])
+    if request.method == "POST":
+        next_question_id = 0
+        if 'next' in request.POST:
+            next_question_id = int(question_id)+1
+            if next_question_id >= len(list_object):
+                next_question_id = len(list_object)-1
+            context = {
+                'json_data': json_data["question"],
+                'question_id': next_question_id
+            }
+        elif 'previous' in request.POST:
+            next_question_id = int(question_id)-1
+            if next_question_id <0:
+                next_question_id = 0
+            context = {
+                'json_data': json_data["question"],
+                'question_id': next_question_id
+            }
+        return render('questionnaire', next_question_id)
+    #paginator = Paginator(json_data["question"], 1)
+
+    #page_number = request.GET.get('page')
+    #page_obj = paginator.get_page(page_number)
     # users = paginator.page(paginator.num_pages)
     
     #page_obj = paginator.get_page(page_number)
     context = {
-        'json_data' : json_data["question"]
+        'json_data': json_data["question"],
+        'question_id': question_id
     }
 
     return render(request,'Rekomender/questionnaire.html',context)
 
-
-
-#     {% if latest_question_list %}
-#     <ul>
-#     {% for question in latest_question_list %}
-#         <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
-#     {% endfor %}
-#     </ul>
-# {% else %}
-#     <p>No polls are available.</p>
-# {% endif %}
+def vote(request, question_id):
+    list_object = []
+    json_data_from_db = QuestionChoices.objects.all()
+    for item in json_data_from_db:
+        list_object.append(item.info)
+    json_data = json.loads(list_object[int(question_id)])
+    
+    try:
+        selected_choice = json_data.get(pk=request.POST['choice'])
+        print(selected_choice)
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'Rekomender/questionnaire.html', {
+            'question': json_data["question"],
+            'question_id': question_id,
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('Rekomender:answers', args=(question_id,)))

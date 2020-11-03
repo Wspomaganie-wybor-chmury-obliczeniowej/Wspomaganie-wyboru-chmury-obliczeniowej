@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path,include
 
 from Rekomender import views 
-
+app_name = 'Rekomender'
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('create/', views.create, name='create'), #mozliwosc stworzenia nowego pytania
-    # path('answers/', views.answers, name='answers'), # rezultal, jaki provider 
+    path('create/', views.create, name='create'), #mozliwosc stworzenia nowego pytania
+    path('answers/<int:question_id>', views.answers, name='answers'), # rezultal, jaki provider 
     # path('questionnaire/', views.questionnaire, name='questionare'),# pytajnik
-    path('questionnaire/', views.questionnaire, name='questionnaire'),
+    path('questionnaire/<question_id>/', views.questionnaire, name='questionnaire'),
+    path('<int:question_id>/vote/', views.vote, name='vote'),
     path('', views.home, name='home'),
 ]
