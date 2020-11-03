@@ -1,0 +1,9 @@
+
+
+<ul>
+    {% for item in json_data %}
+    <h1>{{ item.questiontext }}</h1>    
+    {% endfor %}
+</ul>
+
+<a href="{% url 'questionnaire' question_id %}">Vote again?</a>

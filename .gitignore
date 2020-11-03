@@ -5,8 +5,6 @@ PycharmProjects/__pycache__/
 venv/
 ENV/
 .vscode
-*.sqlite3
-*.db
 *.manifest
 *.spec
 .idea
