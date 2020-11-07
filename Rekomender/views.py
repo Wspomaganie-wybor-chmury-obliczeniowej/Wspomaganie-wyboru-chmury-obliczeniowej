@@ -1,66 +1,20 @@
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.http import HttpResponse
-from .models import Client, Cloud, Question, Choice, QuestionChoices
+from .models import Client, Cloud, Question, Choice, QuestionChoices, user
 from .createJsonQuestion import createQuestion
 from django.core.paginator import Paginator
 import json
 
 # Create your views here.
 def base(request):
-    #include multiple choise 
-    html = "<html><body>It is now </body></html>"
-    json_data2 = '{ "question": [{"questiontext":"W jaki sposób chciałbyś się skontaktować z serwisantem pomocnikiem do konfiguracji?","date_added":"random","Choices":[{"text":"Telefonicznie"},{"text":"Email"}],"flagifmultiple":"0"},{"questiontext":"Jak bardzo zależy ci na szybkiej odpowiedzi serwisanta?","date_added":"random","Choices":[{"text":"Dont Care"},{"text":"Expresowo"}],"flagifmultiple":"0"} ]}'
-    json_data = json.loads(json_data2)
-
-    questionList = []
-    ChoicesList = []
-
-    # for elem in range(0,len(json_data["question"])):
-    #     questionList.append(json_data["question"][elem]["questiontext"])
-    #     ChoicesList.append(json_data["question"][elem]["Choices"])
-    #     for text in json_data["question"][elem]["Choices"]:
-    #         print(text["text"])
-    #     print("stwrozyc graficzne pytanie")  
-    #print ([item["text"] for innerlist in ChoicesList for item in innerlist])
-
-    # for item in questionList:
-    #     #print([item["text"] for item in questionList[item]["Choices"]])
-    #     print ([item["text"] for innerlist in ChoicesList for item in innerlist])
-    
-    # template = loader.get_template('Rekomender/base.html')
-    # context = {
-    #     'latest_question_list': latest_question_list,
-    # }
-    # return HttpResponse(template.render(context, request))
-
-    #return render(request, 'Rekomender/base.html', context)
-    return HttpResponse(html)
+    context = {
+    }
+    return render(request, 'Rekomender/home.html', context)
 
 def home(request):
-    json_data2 = '{ "question": [{"questiontext":"W jaki sposób chciałbyś się skontaktować z serwisantem pomocnikiem do konfiguracji?","date_added":"random","Choices":[{"text":"Telefonicznie"},{"text":"Email"}],"flagifmultiple":"0"},{"questiontext":"Jak bardzo zależy ci na szybkiej odpowiedzi serwisanta?","date_added":"random","Choices":[{"text":"Dont Care"},{"text":"Expresowo"}],"flagifmultiple":"0"} ]}'
-    json_data = json.loads(json_data2)
-   
-    #QuestionChoices.objects.all().delete() #do usuwania wszystkich elementow !%!
-    #zapis do bazy danych 
-    #sample = QuestionChoices()
-    #sample.info = json_data2
-    #sample.save()
-    
-    #list_object = []
-    #json_data_from_db = QuestionChoices.objects.all()
-    #for item in json_data_from_db:
-    #    list_object.append(item.info)
-    #data = list_object[0]
-    #json_data = json.loads(data)
-
     context = {
-        'json_data' : json_data["question"]
     }
-    # for questionList in json_data["question"]:
-    #     print(questionList)
-    #     for choice in questionList["Choices"]:
-    #         print(choice)
     return render(request, 'Rekomender/home.html', context)
 
 # def ImportQuestionChoices():
@@ -74,13 +28,25 @@ def create(request):
     if request.method == 'POST':
         question = request.POST.get('question')
         answers = []
-        answers.append(request.POST.get('option1'))
-        answers.append(request.POST.get('option2'))
-        answers.append(request.POST.get('option3'))
-        answers.append(request.POST.get('option4'))
-        answers.append(request.POST.get('option5'))
-        while("" in answers):
-            answers.remove("")
+        for i in range(1,6):
+            answer = []
+            weights = []
+            answer.append(request.POST.get('option' + str(i)))
+            weights.append(request.POST.get('google' + str(i)))
+            weights.append(request.POST.get('amazon' + str(i)))
+            weights.append(request.POST.get('microsoft' + str(i)))
+            weights.append(request.POST.get('krajowa' + str(i)))
+            weights.append(request.POST.get('ibm' + str(i)))
+            weights.append(request.POST.get('city' + str(i)))
+            weights.append(request.POST.get('task' + str(i)))
+            answer.append(weights)
+            answers.append(answer)
+        for answer in answers:
+            if answer[0] == '':
+                answers.remove(answer)
+        for answer in answers:
+            if answer[0] == '':
+                answers.remove(answer) #robione dwa reazy dla pewności, jedno przejście nie usuwa ostatniego
         sample = QuestionChoices()
         sample.info = createQuestion(question,answers)
         sample.save()
@@ -93,6 +59,23 @@ def answers(request):
     return render( 'Rekomender/answers.html', context)
 
 def questionnaire(request, question_id):
+    try:
+        request.session['amazon']
+    except:
+        request.session['amazon'] = 0
+        request.session['microsoft'] = 0
+        request.session['google'] = 0
+        request.session['krajowa'] = 0
+        request.session['ibm'] = 0
+        request.session['city'] = 0
+        request.session['task'] = 0
+    print(request.session['amazon'])
+    print(request.session['microsoft'])
+    print(request.session['google'])
+    print(request.session['krajowa'])
+    print(request.session['ibm'])
+    print(request.session['city'])
+    print(request.session['task'])
     list_object = []
     json_data_from_db = QuestionChoices.objects.all()
     for item in json_data_from_db:
@@ -100,30 +83,25 @@ def questionnaire(request, question_id):
     json_data = json.loads(list_object[int(question_id)])
     if request.method == "POST":
         next_question_id = 0
+        answer = request.POST.get('question')
+        for choice in json_data['question'][0]['Choices']:
+            if choice['text'] == answer:
+                request.session['amazon'] += int(choice['weights'][0]['amazon'])
+                request.session['microsoft'] += int(choice['weights'][0]['microsoft'])
+                request.session['google'] += int(choice['weights'][0]['google'])
+                request.session['krajowa'] += int(choice['weights'][0]['krajowa'])
+                request.session['ibm'] += int(choice['weights'][0]['ibm'])
+                request.session['city'] += int(choice['weights'][0]['city'])
+                request.session['task'] += int(choice['weights'][0]['task'])
         if 'next' in request.POST:
             next_question_id = int(question_id)+1
             if next_question_id >= len(list_object):
                 next_question_id = len(list_object)-1
-            context = {
-                'json_data': json_data["question"],
-                'question_id': next_question_id
-            }
         elif 'previous' in request.POST:
             next_question_id = int(question_id)-1
             if next_question_id <0:
                 next_question_id = 0
-            context = {
-                'json_data': json_data["question"],
-                'question_id': next_question_id
-            }
         return redirect('questionnaire', next_question_id)
-    #paginator = Paginator(json_data["question"], 1)
-
-    #page_number = request.GET.get('page')
-    #page_obj = paginator.get_page(page_number)
-    # users = paginator.page(paginator.num_pages)
-    
-    #page_obj = paginator.get_page(page_number)
     context = {
         'json_data': json_data["question"],
         'question_id': int(question_id)

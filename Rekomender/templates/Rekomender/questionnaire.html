@@ -6,25 +6,17 @@
 <div class="row">
     <div >
         <div >
-            <form method="POST" action="{% url 'questionnaire' question_id %}">
+            <form method="POST" action="{% url 'questionnaire' question_id  %}">
                 {% csrf_token %}
-                <ul >
                     {% for item in json_data %}
-                    <li >
-                        <strong>{{ item.questiontext }}</strong>
-                    </li>
+                        <strong>{{ item.questiontext }}</strong><br>
                         {%  for choice in item.Choices %}
-                        <li >
-                        <strong>{{ choice.text }}</strong>
-                        </li>
+                            <label><input type="radio" name="question" id="{{ choice.text }}" value="{{ choice.text }}">{{ choice.text}}</label> &nbsp;<br>
                         {% endfor %}
                     {% endfor %}
-                </ul>
                 <button type="submit" id="previous" name="previous">previous</button>
                 <button type="submit" id="next" name="next">next</button>
-
             </form>
-
         </div>
     </div>
 </div>

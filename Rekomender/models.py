@@ -16,7 +16,15 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text  
-
+class user(models.Model):
+    id = models.IntegerField(primary_key=1)
+    amazon = models.IntegerField(default=0)
+    google = models.IntegerField(default=0)
+    microsoft = models.IntegerField(default=0)
+    krajowa = models.IntegerField(default=0)
+    ibm = models.IntegerField(default=0)
+    city = models.IntegerField(default=0)
+    task = models.IntegerField(default=0)
 class Cloud(models.Model):
     provider_name = models.CharField(max_length=50) # wszystko z tabelki
     def __str__(self):
@@ -52,10 +60,56 @@ class QuestionChoices(models.Model):
 #   "date_added": "random",
 #   "Choices": [
 #     {
-#       "text": "Telefonicznie",   
+#       "text": "Telefonicznie",
+#       "weights": [
+#       {
+#           "Google": 1,
+#       },
+#       {
+#           "Amazon": 1,
+#       },
+#       {
+#           "Microsoft": 1,
+#       },
+#       {
+#           "Krajowa": 1,
+#       },
+#       {
+#           "IBM": 1,
+#       },
+#       {
+#           "City": 1,
+#       },
+#       {
+#           "TASK": 1,
+#       }
+#       ],
 #     },
 #     {
-#       "type": "Email",   
+#       "type": "Email",
+#       "weights": [
+#       {
+#           "Google": 1,
+#       },
+#       {
+#           "Amazon": 1,
+#       },
+#       {
+#           "Microsoft": 1,
+#       },
+#       {
+#           "Krajowa": 1,
+#       },
+#       {
+#           "IBM": 1,
+#       },
+#       {
+#           "City": 1,
+#       },
+#       {
+#           "TASK": 1,
+#       }
+#       ],
 #     }
 #   ],
 #   "flag_if_multiple": 0
