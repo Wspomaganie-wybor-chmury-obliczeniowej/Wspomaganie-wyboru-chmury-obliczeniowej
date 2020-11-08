@@ -1,37 +1,29 @@
 {% extends "Rekomender/base.html" %}
-
+{% load static %}
 {% block title %}Homepage{% endblock %}
 
 {% block main %}
-<div class="row">
+<div class="row"></div>
     <div >
         <div >
             <div >
                 <h3 >Available Polls</h3>
             </div>
-                
+                <img class="tdStyle" src="{% static 'clouds.jpg'%}" alt="My image">
             <ul >
-                <form method="post" action="#">
-                {% csrf_token %}
-                <ul>
-                {%  for questionList in json_data %}
+                <button onclick="location.href = 'questionnaire/0/'">Zacznij Quiz</button>
+                <!-- {%  for questionList in json_data %}
                     
                 <li >
                     <strong>{{ questionList.questiontext }}</strong>
                     
                 </li>
-                  
-                      {%  for choice in questionList.Choices %}
-                      <li><input type="checkbox", value="clicked", name="c{{choice.text}}" >{{choice.text}}</li>
-                     
-                      {% endfor %}
-                      <button type="submit", name="newItem", value="newItem">Add Item</button>	
-                      <input type="text", name="new">
-                      <button type="submit", name="save", value="save">Save</button>  
-                              
-                    </ul>      
-                {% endfor %}
-                </form>
+                    {%  for choice in questionList.Choices %}
+                    <li >
+                    <strong>{{ choice.text }}</strong>
+                    </li>
+                    {% endfor %}
+                {% endfor %} -->
             </ul>
 
         </div>

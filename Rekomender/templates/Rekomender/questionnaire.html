@@ -1,34 +1,22 @@
+{% extends "Rekomender/base.html" %}
 
+{% block title %}Homepage{% endblock %}
 
 {% block main %}
 <div class="row">
     <div >
         <div >
-
-
-            
-            <form method="POST" action="{% url 'questionnaire' question_id %}">
+            <form method="POST" action="{% url 'questionnaire' question_id  %}">
                 {% csrf_token %}
-                <ul >
                     {% for item in json_data %}
-                    <li >
-                        <strong>{{ item.questiontext }}</strong>
-                    </li>
+                        <strong>{{ item.questiontext }}</strong><br>
                         {%  for choice in item.Choices %}
-                        <!-- <li >
-                        <strong>{{ choice.text }}</strong>
-                        </li> -->
-                        <input type="checkbox" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-                        <label for="choice{{ forloop.counter }}">{{ choice.text }}</label><br>
+                            <label><input type="radio" name="question" id="{{ choice.text }}" value="{{ choice.text }}">{{ choice.text}}</label> &nbsp;<br>
                         {% endfor %}
                     {% endfor %}
-                </ul>
                 <button type="submit" id="previous" name="previous">previous</button>
-                <button type="submit" value="Vote">nacisnij</button>
                 <button type="submit" id="next" name="next">next</button>
-
             </form>
-
         </div>
     </div>
 </div>

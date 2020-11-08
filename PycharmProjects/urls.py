@@ -24,6 +24,6 @@ urlpatterns = [
     path('answers/<int:question_id>', views.answers, name='answers'), # rezultal, jaki provider 
     # path('questionnaire/', views.questionnaire, name='questionare'),# pytajnik
     path('questionnaire/<question_id>/', views.questionnaire, name='questionnaire'),
-    path('<int:question_id>/vote/', views.vote, name='vote'),
+    #path('<int:question_id>/vote/', views.vote, name='vote'),
     path('', views.home, name='home'),
 ]
