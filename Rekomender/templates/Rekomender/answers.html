@@ -1,0 +1,21 @@
+{% extends "Rekomender/base.html" %}
+{% load static %}
+{% block title %}Results{% endblock %}
+
+{% block main %}
+<div class="row"></div>
+    <div>
+        <div>
+            <div>
+                <h3>Results</h3>
+                 <label>Polecamy ci: {{ winner }}</label><br>
+                {% for obj in to_print %}
+                    <label>Pytanie: {{ obj.0 }}</label><br>
+                    <label>Twoja odpowiedź: {{ obj.1 }}</label><br>
+                    <label>Opis: {{ obj.2 }}</label><br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

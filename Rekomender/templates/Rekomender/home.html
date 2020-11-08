@@ -1,29 +1,29 @@
 {% extends "Rekomender/base.html" %}
-
+{% load static %}
 {% block title %}Homepage{% endblock %}
 
 {% block main %}
-<div class="row">
+<div class="row"></div>
     <div >
         <div >
             <div >
                 <h3 >Available Polls</h3>
             </div>
-                
+                <img class="tdStyle" src="{% static 'clouds.jpg'%}" alt="My image">
             <ul >
-            
-                {%  for questionList in json_data %}
-                    
+                <button onclick="location.href = 'questionnaire/0/'">Zacznij Quiz</button>
+                <!-- {%  for questionList in json_data %}
+
                 <li >
                     <strong>{{ questionList.questiontext }}</strong>
-                    
+
                 </li>
                     {%  for choice in questionList.Choices %}
                     <li >
                     <strong>{{ choice.text }}</strong>
                     </li>
                     {% endfor %}
-                {% endfor %}
+                {% endfor %} -->
             </ul>
 
         </div>

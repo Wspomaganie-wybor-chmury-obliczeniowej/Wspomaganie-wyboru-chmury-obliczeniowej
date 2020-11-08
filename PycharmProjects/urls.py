@@ -1,5 +1,5 @@
+  
 """PycharmProjects URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
 Examples:
@@ -17,11 +17,11 @@ from django.contrib import admin
 from django.urls import path,include
 
 from Rekomender import views 
-
+app_name = 'Rekomender'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('create/', views.create, name='create'), #mozliwosc stworzenia nowego pytania
-    # path('answers/', views.answers, name='answers'), # rezultal, jaki provider 
+    path('answers/', views.answers, name='answers'), # rezultal, jaki provider
     # path('questionnaire/', views.questionnaire, name='questionare'),# pytajnik
     path('questionnaire/<question_id>/', views.questionnaire, name='questionnaire'),
     path('', views.home, name='home'),
