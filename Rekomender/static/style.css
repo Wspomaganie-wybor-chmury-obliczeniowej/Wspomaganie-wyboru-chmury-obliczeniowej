@@ -19,6 +19,9 @@
     border-top-left-radius: 0;
 	border-top-right-radius: 0; 
 }
+body{
+    background-image: url( "{% static 'clouds.jpg' %}");
+}
 .tdStyle
 {
 width: 100%;

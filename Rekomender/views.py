@@ -51,10 +51,10 @@ def create(request):
             answer.append(description)
             answers.append(answer)
         for answer in answers:
-            if answer[0] == None:
+            if answer[0] == "":
                 answers.remove(answer)
         for answer in answers:
-            if answer[0] == None:
+            if answer[0] == "":
                 answers.remove(answer) #robione dwa reazy dla pewności, jedno przejście nie usuwa ostatniego
         sample = QuestionChoices()
         
@@ -82,17 +82,18 @@ def questionnaire(request, question_id):
         request.session['city'] = 0
         request.session['task'] = 0
         
-        request.session['amazon_des'] = ""
-        request.session['microsoft_des'] = ""
-        request.session['google_des'] = ""
-        request.session['krajowa_des'] = ""
-        request.session['ibm_des'] = ""
-        request.session['city_des'] = ""
-        request.session['task_des'] = ""
+        request.session['selectedChoices'] = ""
+        # request.session['microsoft_des'] = ""
+        # request.session['google_des'] = ""
+        # request.session['krajowa_des'] = ""
+        # request.session['ibm_des'] = ""
+        # request.session['city_des'] = ""
+        # request.session['task_des'] = ""
     print(request.session['amazon'])
-    print(request.session['amazon_des'])
+    print(request.session['selectedChoices'])
+    #print(request.session['amazon_des'])
     print(request.session['microsoft'])
-    print(request.session['microsoft_des'])
+    #print(request.session['microsoft_des'])
     print(request.session['google'])
     print(request.session['krajowa'])
     print(request.session['ibm'])
@@ -116,13 +117,13 @@ def questionnaire(request, question_id):
                 request.session['city'] += int(choice['weights'][0]['city'])
                 request.session['task'] += int(choice['weights'][0]['task'])
 
-                request.session['amazon_des'] += choice['weights'][0]['desamazon']
-                request.session['microsoft_des'] += choice['weights'][0]['desmicrosoft']
-                request.session['google_des'] += choice['weights'][0]['desgoogle']
-                request.session['krajowa_des'] += choice['weights'][0]['deskrajowa']
-                request.session['ibm_des'] += choice['weights'][0]['desibm']
-                request.session['city_des'] += choice['weights'][0]['descity']
-                request.session['task_des'] += choice['weights'][0]['destask']
+                request.session['selectedChoices'] += choice['text'] + "##"
+                # request.session['microsoft_des'] += choice['weights'][0]['desmicrosoft']
+                # request.session['google_des'] += choice['weights'][0]['desgoogle']
+                # request.session['krajowa_des'] += choice['weights'][0]['deskrajowa']
+                # request.session['ibm_des'] += choice['weights'][0]['desibm']
+                # request.session['city_des'] += choice['weights'][0]['descity']
+                # request.session['task_des'] += choice['weights'][0]['destask']
         if 'next' in request.POST:
             next_question_id = int(question_id)+1
             if next_question_id >= len(list_object):

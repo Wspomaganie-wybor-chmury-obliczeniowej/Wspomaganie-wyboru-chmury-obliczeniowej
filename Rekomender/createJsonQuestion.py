@@ -36,7 +36,7 @@ def createQuestion(question, answers):
                         # '"task":"' + str(answer[2][6]) + '"}] }'
             first = False
         else:
-            question +=  '{"text": "' + answer[0] + '",' + \
+            question += ',{"text": "' + answer[0] + '",' + \
                         '"weights": [{' + \
                         '"google": "' + str(answer[1][0]) + '",' + \
                         '"desgoogle": "' + str(answer[2][0]) + '",' + \
