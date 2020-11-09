@@ -76,14 +76,14 @@ def questionnaire(request, question_id):
         request.session['selectedChoices']
     except:
         request.session['selectedChoices'] = ""
-    print(request.session['amazon'])
+    print('Amazon: ', request.session['amazon'])
+    print('microsoft: ',request.session['microsoft'])
+    print('google: ',request.session['google'])
+    print('krajowa: ',request.session['krajowa'])
+    print('ibm: ',request.session['ibm'])
+    print('city: ',request.session['city'])
+    print('task: ',request.session['task'])
     print(request.session['selectedChoices'])
-    print(request.session['microsoft'])
-    print(request.session['google'])
-    print(request.session['krajowa'])
-    print(request.session['ibm'])
-    print(request.session['city'])
-    print(request.session['task'])
     list_object = []
     json_data_from_db = QuestionChoices.objects.all()
     for item in json_data_from_db:
@@ -128,20 +128,25 @@ def answers(request):
     winners.append(int(request.session['ibm']))
     winners.append(int(request.session['city']))
     winners.append(int(request.session['task']))
-    winner = max(winners)
-    if winner == 0:
+    winnerTemp = max(winners)
+    winner = ""
+    for i in range(0,len(winners)):
+        if winners[i] == winnerTemp:
+            winnerTemp = i
+            break
+    if winnerTemp == 0:
         winner = 'amazon'
-    elif winner == 1:
+    elif winnerTemp == 1:
         winner = 'microsoft'
-    elif winner == 2:
+    elif winnerTemp == 2:
         winner = 'google'
-    elif winner == 3:
+    elif winnerTemp == 3:
         winner = 'krajowa'
-    elif winner == 4:
+    elif winnerTemp == 4:
         winner = 'ibm'
-    elif winner == 5:
+    elif winnerTemp == 5:
         winner = 'city'
-    elif winner == 6:
+    elif winnerTemp == 6:
         winner = 'task'
     answers = request.session['selectedChoices']
     answers = answers.split('##')
