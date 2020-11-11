@@ -3,32 +3,26 @@ from django.template import loader
 from django.http import HttpResponse
 from .models import Client, Cloud, Question, Choice, QuestionChoices, user
 from .createJsonQuestion import createQuestion
-from django.core.paginator import Paginator
 import json
 
-# Create your views here.
+
 def base(request):
     context = {
     }
     return render(request, 'Rekomender/home.html', context)
+
 
 def home(request):
     context = {
     }
     return render(request, 'Rekomender/home.html', context)
 
-# def ImportQuestionChoices():
-#     QuestionChoices QC
-#     json_data = {"questions":[{"question_text": "W jaki sposób chciałbyś się skontaktować z serwisantem/ pomocnikiem do konfiguracji?","date_added": "random","Choices": [{"text": "Telefonicznie",},{"type": "Email",}],"flag_if_multiple": 0}]}"
-#     QC.info = json.loads(json_data)
-#     QC.save()
-#     print(json_data.question[0].question_text)
-#{"questions":[{"question_text": "W jaki sposób chciałbyś się skontaktować z serwisantem/ pomocnikiem do konfiguracji?","date_added": "random","Choices": [{"text": "Telefonicznie",},{"type": "Email",}],"flag_if_multiple": 0}]}
+
 def create(request):
     if request.method == 'POST':
         question = request.POST.get('question')
         answers = []
-        for i in range(1,6): 
+        for i in range(1, 6):
             answer = []
             weights = []
             description = []
@@ -46,29 +40,26 @@ def create(request):
             weights.append(request.POST.get('krajowa' + str(i)))
             weights.append(request.POST.get('ibm' + str(i)))
             weights.append(request.POST.get('city' + str(i)))
-            weights.append(request.POST.get('task' + str(i)))       
+            weights.append(request.POST.get('task' + str(i)))
             answer.append(weights)
             answer.append(description)
             answers.append(answer)
+        for answer in answers:
+            if answer[0] is None:
+                answers.remove(answer)
         for answer in answers:
             if answer[0] == "":
                 answers.remove(answer)
         for answer in answers:
             if answer[0] == "":
-                answers.remove(answer) #robione dwa reazy dla pewności, jedno przejście nie usuwa ostatniego
+                answers.remove(answer)  # robione dwa reazy dla pewności, jedno przejście nie usuwa ostatniego
         sample = QuestionChoices()
-        
-        print(answers)
-        sample.info = createQuestion(question,answers)
-        print('create complete')
+
+        sample.info = createQuestion(question, answers)
         sample.save()
     context = {}
-    return render(request,'Rekomender/create.html', context)
+    return render(request, 'Rekomender/create.html', context)
 
-def answers(request):
-    context = {}
-    response = "You're looking at the results of question %s."
-    return render( 'Rekomender/answers.html', context)
 
 def questionnaire(request, question_id):
     try:
@@ -81,24 +72,18 @@ def questionnaire(request, question_id):
         request.session['ibm'] = 0
         request.session['city'] = 0
         request.session['task'] = 0
-        
+    try:
+        request.session['selectedChoices']
+    except:
         request.session['selectedChoices'] = ""
-        # request.session['microsoft_des'] = ""
-        # request.session['google_des'] = ""
-        # request.session['krajowa_des'] = ""
-        # request.session['ibm_des'] = ""
-        # request.session['city_des'] = ""
-        # request.session['task_des'] = ""
-    print(request.session['amazon'])
+    print('Amazon: ', request.session['amazon'])
+    print('microsoft: ',request.session['microsoft'])
+    print('google: ',request.session['google'])
+    print('krajowa: ',request.session['krajowa'])
+    print('ibm: ',request.session['ibm'])
+    print('city: ',request.session['city'])
+    print('task: ',request.session['task'])
     print(request.session['selectedChoices'])
-    #print(request.session['amazon_des'])
-    print(request.session['microsoft'])
-    #print(request.session['microsoft_des'])
-    print(request.session['google'])
-    print(request.session['krajowa'])
-    print(request.session['ibm'])
-    print(request.session['city'])
-    print(request.session['task'])
     list_object = []
     json_data_from_db = QuestionChoices.objects.all()
     for item in json_data_from_db:
@@ -118,36 +103,83 @@ def questionnaire(request, question_id):
                 request.session['task'] += int(choice['weights'][0]['task'])
 
                 request.session['selectedChoices'] += choice['text'] + "##"
-                # request.session['microsoft_des'] += choice['weights'][0]['desmicrosoft']
-                # request.session['google_des'] += choice['weights'][0]['desgoogle']
-                # request.session['krajowa_des'] += choice['weights'][0]['deskrajowa']
-                # request.session['ibm_des'] += choice['weights'][0]['desibm']
-                # request.session['city_des'] += choice['weights'][0]['descity']
-                # request.session['task_des'] += choice['weights'][0]['destask']
         if 'next' in request.POST:
-            next_question_id = int(question_id)+1
+            next_question_id = int(question_id) + 1
             if next_question_id >= len(list_object):
-                next_question_id = len(list_object)-1
+                print('here')
+                return redirect('answers')
         elif 'previous' in request.POST:
-            next_question_id = int(question_id)-1
-            if next_question_id <0:
+            next_question_id = int(question_id) - 1
+            if next_question_id < 0:
                 next_question_id = 0
+        print(request.session['selectedChoices'])
+        print("TEST_inner")
         return redirect('questionnaire', next_question_id)
+    print("TEST")    
+    print(request.session['selectedChoices'])
     context = {
         'json_data': json_data["question"],
         'question_id': int(question_id)
     }
-
-    return render(request,'Rekomender/questionnaire.html',context)
-
+    return render(request, 'Rekomender/questionnaire.html', context)
 
 
-#     {% if latest_question_list %}
-#     <ul>
-#     {% for question in latest_question_list %}
-#         <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
-#     {% endfor %}
-#     </ul>
-# {% else %}
-#     <p>No polls are available.</p>
-# {% endif %}
+def answers(request):
+    winners = []
+    winners.append(int(request.session['amazon']))
+    winners.append(int(request.session['microsoft']))
+    winners.append(int(request.session['google']))
+    winners.append(int(request.session['krajowa']))
+    winners.append(int(request.session['ibm']))
+    winners.append(int(request.session['city']))
+    winners.append(int(request.session['task']))
+    winnerTemp = max(winners)
+    winner = ""
+    for i in range(0,len(winners)):
+        if winners[i] == winnerTemp:
+            winnerTemp = i
+            break
+    if winnerTemp == 0:
+        winner = 'amazon'
+    elif winnerTemp == 1:
+        winner = 'microsoft'
+    elif winnerTemp == 2:
+        winner = 'google'
+    elif winnerTemp == 3:
+        winner = 'krajowa'
+    elif winnerTemp == 4:
+        winner = 'ibm'
+    elif winnerTemp == 5:
+        winner = 'city'
+    elif winnerTemp == 6:
+        winner = 'task'
+    answers = request.session['selectedChoices']
+    answers = answers.split('##')
+    print('answers')
+    print(answers)
+    del answers[-1]  # usuwamy ostatni bo zawsze jest to pusty element
+    list_object = []
+    json_data_from_db = QuestionChoices.objects.all()
+    for item in json_data_from_db:
+        list_object.append(item.info)
+    counter = 0
+    to_print = []
+    for question in list_object:
+        temp = json.loads(question)
+        for choice in temp['question'][0]['Choices']:
+            if choice['text'] == answers[counter]:
+                temp = [temp['question'][0]['questiontext'], answers[counter], choice['weights'][0]['des' + winner]]
+                to_print.append(temp)
+    context = {
+        'winner': winner,
+        'to_print': to_print
+    }
+    request.session['amazon'] = 0
+    request.session['microsoft'] = 0
+    request.session['google'] = 0
+    request.session['krajowa'] = 0
+    request.session['ibm'] = 0
+    request.session['city'] = 0
+    request.session['task'] = 0
+    request.session['selectedChoices'] = ""
+    return render(request, 'Rekomender/answers.html', context)

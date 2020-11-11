@@ -1,9 +1,21 @@
+{% extends "Rekomender/base.html" %}
+{% load static %}
+{% block title %}Results{% endblock %}
 
-
-<ul>
-    {% for item in json_data %}
-    <h1>{{ item.questiontext }}</h1>    
-    {% endfor %}
-</ul>
-
-<a href="{% url 'questionnaire' question_id %}">Vote again?</a>
+{% block main %}
+<div class="row"></div>
+    <div>
+        <div>
+            <div>
+                <h3>Results</h3>
+                 <label>Najlepszym zdaniem powinieneś skorzystać z usług: {{ winner }}</label><br>
+                {% for obj in to_print %}
+                    <label>Pytanie: {{ obj.0 }}</label><br>
+                    <label>Twoja odpowiedź: {{ obj.1 }}</label><br>
+                    <label>Uzasadnienie: {{ obj.2 }}</label><br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -26,14 +26,6 @@ def createQuestion(question, answers):
                         '"descity": "' + str(answer[2][5]) + '",' + \
                         '"task":"' + str(answer[1][6])  + '",' + \
                         '"destask": "' + str(answer[2][6]) + '"}]}'
-                        # '"AnswerDescription": [{' + \
-                        # '"google": "' + str(answer[2][0]) + '",' + \
-                        # '"amazon": "' + str(answer[2][1]) + '",' + \
-                        # '"microsoft":"' + str(answer[2][2]) + '",' + \
-                        # '"krajowa":"' + str(answer[2][3]) + '",' + \
-                        # '"ibm":"' + str(answer[2][4]) + '",' + \
-                        # '"city":"' + str(answer[2][5]) + '",' + \
-                        # '"task":"' + str(answer[2][6]) + '"}] }'
             first = False
         else:
             question += ',{"text": "' + answer[0] + '",' + \
