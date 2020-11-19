@@ -17,6 +17,10 @@ def home(request):
     }
     return render(request, 'Rekomender/home.html', context)
 
+def user_questions(request):
+    context = {
+    }
+    return render(request, 'Rekomender/user_questions.html', context)
 
 def create(request):
     if request.method == 'POST':
@@ -106,17 +110,12 @@ def questionnaire(request, question_id):
         if 'next' in request.POST:
             next_question_id = int(question_id) + 1
             if next_question_id >= len(list_object):
-                print('here')
                 return redirect('answers')
         elif 'previous' in request.POST:
             next_question_id = int(question_id) - 1
             if next_question_id < 0:
                 next_question_id = 0
-        print(request.session['selectedChoices'])
-        print("TEST_inner")
         return redirect('questionnaire', next_question_id)
-    print("TEST")    
-    print(request.session['selectedChoices'])
     context = {
         'json_data': json_data["question"],
         'question_id': int(question_id)
