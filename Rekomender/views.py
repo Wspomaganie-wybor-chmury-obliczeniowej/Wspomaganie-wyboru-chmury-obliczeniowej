@@ -18,6 +18,27 @@ def home(request):
     return render(request, 'Rekomender/home.html', context)
 
 def user_questions(request):
+    if request.method == 'POST':
+        question = request.POST.get('question')
+        answers = []
+        for i in range(1, 6):
+            answer = []
+            answer.append(request.POST.get('option' + str(i)))
+            answers.append(answer)
+        for answer in answers:
+            if answer[0] is None:
+                answers.remove(answer)
+        for answer in answers:
+            if answer[0] == "":
+                answers.remove(answer)
+        for answer in answers:
+            if answer[0] == "":
+                answers.remove(answer)  # robione dwa reazy dla pewności, jedno przejście nie usuwa ostatniego
+        sample = QuestionChoices()
+
+        sample.info = createQuestion(question, answers)
+        sample.save()
+
     context = {
     }
     return render(request, 'Rekomender/user_questions.html', context)
@@ -95,26 +116,32 @@ def questionnaire(request, question_id):
     json_data = json.loads(list_object[int(question_id)])
     if request.method == "POST":
         next_question_id = 0
-        answer = request.POST.get('question')
-        for choice in json_data['question'][0]['Choices']:
-            if choice['text'] == answer:
-                request.session['amazon'] += int(choice['weights'][0]['amazon'])
-                request.session['microsoft'] += int(choice['weights'][0]['microsoft'])
-                request.session['google'] += int(choice['weights'][0]['google'])
-                request.session['krajowa'] += int(choice['weights'][0]['krajowa'])
-                request.session['ibm'] += int(choice['weights'][0]['ibm'])
-                request.session['city'] += int(choice['weights'][0]['city'])
-                request.session['task'] += int(choice['weights'][0]['task'])
+        if 'pomin' not in request.POST:
+            answer = request.POST.get('question')
+            for choice in json_data['question'][0]['Choices']:
+                if choice['text'] == answer:
+                    request.session['amazon'] += int(choice['weights'][0]['amazon'])
+                    request.session['microsoft'] += int(choice['weights'][0]['microsoft'])
+                    request.session['google'] += int(choice['weights'][0]['google'])
+                    request.session['krajowa'] += int(choice['weights'][0]['krajowa'])
+                    request.session['ibm'] += int(choice['weights'][0]['ibm'])
+                    request.session['city'] += int(choice['weights'][0]['city'])
+                    request.session['task'] += int(choice['weights'][0]['task'])
 
-                request.session['selectedChoices'] += choice['text'] + "##"
-        if 'next' in request.POST:
+                    request.session['selectedChoices'] += choice['text'] + "##"
+            if 'next' in request.POST:
+                next_question_id = int(question_id) + 1
+                if next_question_id >= len(list_object):
+                    return redirect('answers')
+            elif 'previous' in request.POST:
+                next_question_id = int(question_id) - 1
+                if next_question_id < 0:
+                    next_question_id = 0
+        else:
             next_question_id = int(question_id) + 1
             if next_question_id >= len(list_object):
-                return redirect('answers')
-        elif 'previous' in request.POST:
-            next_question_id = int(question_id) - 1
-            if next_question_id < 0:
-                next_question_id = 0
+                    return redirect('answers')
+                        
         return redirect('questionnaire', next_question_id)
     context = {
         'json_data': json_data["question"],
@@ -154,7 +181,7 @@ def answers(request):
         winner = 'task'
     answers = request.session['selectedChoices']
     answers = answers.split('##')
-    print('answers')
+    
     print(answers)
     del answers[-1]  # usuwamy ostatni bo zawsze jest to pusty element
     list_object = []

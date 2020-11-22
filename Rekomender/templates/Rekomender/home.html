@@ -3,21 +3,19 @@
 {% block title %}Homepage{% endblock %}
 
 {% block main %}
-<div class="row"></div>
+<div class="row align-items-center"></div>
     <div >
-        <div >
-            <div >
-                <h3 >Available Polls</h3>
-            </div>
+        <div class="row">
                 <!-- <img class="tdStyle" src="{% static 'clouds.jpg'%}" alt="My image"> -->
             <ul >
-                <div >
-                    <h3 >Drogi użytkowniku witamy Cię na naszej stronie. Zależy nam na udoskonalaniu naszego rekomendera, w tym celu pod
-                        każdym pytaniem umieściliśmy pole tekstowe na wprowadzenie wartości przydatności, ważności poszczególnego pytania.
+                <div class="col align-self-center" >
+                    <h2 >Drogi użytkowniku witamy Cię na naszej stronie. Zależy nam na udoskonalaniu naszego rekomendera, w tym celu pod
+                        każdym pytaniem umieściliśmy pole tekstowe na wprowadzenie wartości przydatności poszczególnego pytania.
                         Będziemy wdzięczni za pomoc przy rozwoju rekomdera. Dodatkowo na początku stworzyliśmy kilka pytań, które pomogą nam lepiej zrozumieć 
-                    Twoje potrzeby </h3>
+                    Twoje potrzeby </h2>
                 </div>
-                <button onclick="location.href = 'questionnaire/0/'">Zacznij Quiz</button>
+                <button class="btn btn-primary btn-lg" onclick="location.href = 'questionnaire/0/'">Zacznij Quiz</button>
+                
                 <!-- {%  for questionList in json_data %}
                 <li >
                     <strong>{{ questionList.questiontext }}</strong>
