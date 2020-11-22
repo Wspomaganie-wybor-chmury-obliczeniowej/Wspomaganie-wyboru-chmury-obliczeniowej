@@ -97,6 +97,7 @@ def questionnaire(request, question_id):
         request.session['ibm'] = 0
         request.session['city'] = 0
         request.session['task'] = 0
+        request.session['multiply_by'] = 1 
     try:
         request.session['selectedChoices']
     except:
@@ -118,17 +119,24 @@ def questionnaire(request, question_id):
         next_question_id = 0
         if 'pomin' not in request.POST:
             answer = request.POST.get('question')
+            multiply_by = request.POST.get('score')
+            if multiply_by == "" or  int(multiply_by)<= int(3):
+                multiply_by = 1 
+            else:    
+                multiply_by = int(multiply_by)/10 + 1    
             for choice in json_data['question'][0]['Choices']:
                 if choice['text'] == answer:
-                    request.session['amazon'] += int(choice['weights'][0]['amazon'])
-                    request.session['microsoft'] += int(choice['weights'][0]['microsoft'])
-                    request.session['google'] += int(choice['weights'][0]['google'])
-                    request.session['krajowa'] += int(choice['weights'][0]['krajowa'])
-                    request.session['ibm'] += int(choice['weights'][0]['ibm'])
-                    request.session['city'] += int(choice['weights'][0]['city'])
-                    request.session['task'] += int(choice['weights'][0]['task'])
+                    request.session['amazon'] += (int(choice['weights'][0]['amazon']) * multiply_by)
+                    request.session['microsoft'] += (int(choice['weights'][0]['microsoft']) * multiply_by)
+                    request.session['google'] += (int(choice['weights'][0]['google']) * multiply_by)
+                    request.session['krajowa'] += (int(choice['weights'][0]['krajowa']) * multiply_by)
+                    request.session['ibm'] += (int(choice['weights'][0]['ibm']) * multiply_by)
+                    request.session['city'] += (int(choice['weights'][0]['city']) * multiply_by)
+                    request.session['task'] += (int(choice['weights'][0]['task']) * multiply_by)
 
-                    request.session['selectedChoices'] += choice['text'] + "##"
+
+                    
+                    request.session['selectedChoices'] += choice['text'] + "##"        
             if 'next' in request.POST:
                 next_question_id = int(question_id) + 1
                 if next_question_id >= len(list_object):
