@@ -6,6 +6,7 @@
 <div class="row">
     <div >
         <div >
+            <div>
             <form method="POST" action="{% url 'questionnaire' question_id  %}">
                 {% csrf_token %}
                     {% for item in json_data %}
@@ -14,9 +15,14 @@
                             <label><input type="radio" name="question" id="{{ choice.text }}" value="{{ choice.text }}">{{ choice.text}}</label> &nbsp;<br>
                         {% endfor %}
                     {% endfor %}
-{#                <button type="submit" id="previous" name="previous">previous</button>#}
+
+                    <label for="score">Jak oceniasz przydatność tego pytania w skali 1-5?</label>
+                <input id="score" type="number" name="score" max="5" min="1">
+                <button type="submit" id="pomin" name="pomin">pomiń</button>
                 <button type="submit" id="next" name="next">next</button>
+
             </form>
+            </div>
         </div>
     </div>
 </div>

@@ -8,13 +8,22 @@
         <div>
             <div>
                 <h3>Results</h3>
-                 <label>Polecamy ci: {{ winner }}</label><br>
+                {% if equal == 0 %}
+                 <label>Polecamy ci: {{ winner }}</label><br><br>
+                {% endif %}
                 {% for obj in to_print %}
                     <label>Pytanie: {{ obj.0 }}</label><br>
                     <label>Twoja odpowiedź: {{ obj.1 }}</label><br>
                     <label>Opis: {{ obj.2 }}</label><br>
+                    <br><br>
                 {% endfor %}
             </div>
+        <p>Drogi Użytkowniku, dziękujemy Ci za udział w ankiecie. Zachęcamy do dokonania dotacji na dalszy rozwój projektu.
+                Wasz feedback pozwala nam dalej rozwijać aplikację </p>
+
+
+                <p>Zachęcamy do stworzenia pytań, pozwalający nam ulepszyć algorytm rekomendacji</p>
+                <button onclick="location.href = '/user_questions/'">Utwórz pytanie</button>
         </div>
     </div>
 </div>

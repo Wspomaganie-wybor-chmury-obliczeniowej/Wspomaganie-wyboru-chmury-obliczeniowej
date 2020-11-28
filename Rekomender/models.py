@@ -49,9 +49,15 @@ class QuestionChoices(models.Model):
     @classmethod
     def create(cls, info):
         question = cls(info=info)
-        # do something with the book
         return QuestionChoices
+class UserQuestions(models.Model):
+    info = JSONField(null=True, blank=True)
 
+
+    @classmethod
+    def create(cls, info):
+        question = cls(info=info)
+        return QuestionChoices
 
 #przykładowy json, zamiast tworzyć CSV zrobić jsona, łatwiejszy w imporcie
 #  "questions":[ 
