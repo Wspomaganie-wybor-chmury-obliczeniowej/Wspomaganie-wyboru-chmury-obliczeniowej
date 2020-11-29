@@ -25,6 +25,7 @@ urlpatterns = [
     path('user_questions/', views.user_questions, name='user_questions'),
     # path('questionnaire/', views.questionnaire, name='questionare'),# pytajnik
     path('questionnaire/<question_id>/', views.questionnaire, name='questionnaire'),
+    path('identyfyUser/<question_id>/',views.identyfyUser, name='identyfyUser'),
     #path('<int:question_id>/vote/', views.vote, name='vote'),
     path('', views.home, name='home'),
 ]

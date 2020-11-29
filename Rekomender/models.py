@@ -16,12 +16,6 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text  
-
-class Cloud(models.Model):
-    provider_name = models.CharField(max_length=50) # wszystko z tabelki
-    def __str__(self):
-        return self.Cloud_text
-
 class user(models.Model):
     id = models.IntegerField(primary_key=1)
     amazon = models.IntegerField(default=0)
@@ -30,11 +24,17 @@ class user(models.Model):
     krajowa = models.IntegerField(default=0)
     ibm = models.IntegerField(default=0)
     city = models.IntegerField(default=0)
-    task = models.IntegerField(default=0)            
+    task = models.IntegerField(default=0)
+class Cloud(models.Model):
+    provider_name = models.CharField(max_length=50) # wszystko z tabelki
+    def __str__(self):
+        return self.Cloud_text
+
     #list of services ? 
 # class Service(models.Model):
 #     name =  models.CharField(max_length=100)
 #     weight = models.IntegerField(default=1)
+
 class Client(models.Model):
     client_name = models.CharField(max_length=50)
     client_experience = models.IntegerField(default=0)
@@ -45,12 +45,28 @@ class Client(models.Model):
 class QuestionChoices(models.Model):
     info = JSONField(null=True, blank=True)
 
+
     @classmethod
     def create(cls, info):
         question = cls(info=info)
-        # do something with the book
+        return QuestionChoices
+class UserQuestions(models.Model):
+    info = JSONField(null=True, blank=True)
+
+
+    @classmethod
+    def create(cls, info):
+        question = cls(info=info)
         return QuestionChoices
 
+class IdentifyUserQuestions(models.Model):
+    info = JSONField(null=True, blank=True)
+
+
+    @classmethod
+    def create(cls, info):
+        question = cls(info=info)
+        return QuestionChoices        
 
 #przykładowy json, zamiast tworzyć CSV zrobić jsona, łatwiejszy w imporcie
 #  "questions":[ 
@@ -60,58 +76,27 @@ class QuestionChoices(models.Model):
 #   "Choices": [
 #     {
 #       "text": "Telefonicznie",
-#       "AnswerDescription": [
-#       {
-#           "Google": "nie mam pomysłu dlaczego",
-#       },
-#       {
-#           "Amazon": "Amazon rządzi",
-#       },
-#       {
-#           "Microsoft": "Great, ale wysokie koszty",
-#       },
-#       {
-#           "Krajowa": "Krajowy dostawca, jako nieliczny umożliwia konakt w języku polskim",
-#       },
-#       {
-#           "IBM": "Słaby zasięg",
-#       },
-#       {
-#           "City": "Długi czas oczekiwania na połączenie ",
-#       },
-#       {
-#           "TASK": "Lokalny dostawca, jako nieliczny umożliwia konakt w języku polskim",
-#       }
-#       ],AnswerDescription
-   #     "weights": [
+#       "weights": [
 #       {
 #           "Google": 1,
-#            "desGoogle": "nie mam pomysłu dlaczego",
 #       },
 #       {
 #           "Amazon": 1,
-#            "desAmazon": "Amazon rządzi",
 #       },
 #       {
 #           "Microsoft": 1,
-#            "desMicrosoft": "Great, ale wysokie koszty",
 #       },
 #       {
 #           "Krajowa": 1,
-#            "desKrajowa": "Krajowy dostawca, jako nieliczny umożliwia konakt w języku polskim",
-
 #       },
 #       {
 #           "IBM": 1,
-#            "desIBM": "Słaby zasięg",
 #       },
 #       {
 #           "City": 1,
- #           "desCity": "Długi czas oczekiwania na połączenie ",
 #       },
 #       {
 #           "TASK": 1,
-  #          "desTASK": "Lokalny dostawca, jako nieliczny umożliwia konakt w języku polskim",
 #       }
 #       ],
 #     },
@@ -145,5 +130,4 @@ class QuestionChoices(models.Model):
 #   "flag_if_multiple": 0
 # }
 # ],
-
-  
+  #check this out !!!!! https://django-import-data.readthedocs.io/en/latest/
