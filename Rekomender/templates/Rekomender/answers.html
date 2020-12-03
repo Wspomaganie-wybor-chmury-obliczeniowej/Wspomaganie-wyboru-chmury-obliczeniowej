@@ -8,19 +8,25 @@
         <div>
             <div>
                 <h3>Results</h3>
-                 <label>Najlepszym zdaniem powinieneś skorzystać z usług: {{ winner }}</label><br>
+                {% if equal == 0 %}
+                 <label> Na podstawie zabranych informacji oraz dokonaniu analizy rekomendujemy Tobie usługi świadczone przez: <strong>{{ winner }}</strong></label><br><br>
+                {% endif %}
+                <label>Poniżej prezentujemy listę zaznaczonych przez Ciebie odpowiedzi oraz naszą opinię na temat poszcególnej usługi </label>
+                <br></br>
                 {% for obj in to_print %}
                     <label>Pytanie: {{ obj.0 }}</label><br>
                     <label>Twoja odpowiedź: {{ obj.1 }}</label><br>
                     <label>Uzasadnienie: {{ obj.2 }}</label><br>
+                    <br><br>
                 {% endfor %}
             </div>
-            <p>Drogi Użytkowniku, dziękujemy Ci za udział w ankiecie. Zachęcamy do dokonania dotacji na dalszy rozwój projektu. 
-                Wasz feedback pozwala nam dalej rozwijać aplikację </p>
-               
+        <p>Drogi Użytkowniku, dziękujemy Ci za udział w ankiecie. Mamy nadzieję, że nasz program pomoże Ci w dokonaniu decyzji. 
+            Jeśli oceniasz nasz produkt za wartościowy to zachęcamy do współpracy(565-231-213).
+            Wasz feedback pozwala nam rozwijać aplikację </p>
 
-                <p>Zachęcamy do stworzenia pytań, pozwalający nam ulepszyć algorytm rekomendacji</p>
-                <button class="btn btn-primary btn-lg" onclick="location.href = '/user_questions/'">Utwórz pytanie</button>
+
+                <p>Zachęcamy do stworzenia pytań, Wasze pytania pozwalają nam ulepszyć algorytm rekomendacji</p>
+                <button onclick="location.href = '/user_questions/'">Utwórz pytanie</button>
         </div>
     </div>
 </div>

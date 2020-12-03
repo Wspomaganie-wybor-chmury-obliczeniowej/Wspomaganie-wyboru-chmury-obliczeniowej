@@ -11,8 +11,12 @@ def base(request):
     }
     return render(request, 'Rekomender/home.html', context)
 
-
+def erase_questions():
+    QuestionChoices.objects.all().delete()
+    UserQuestions.objects.all().delete()
+    #IdentifyUserQuestions.objects.all().delete()
 def home(request):
+    #erase_questions()
     context = {
     }
     return render(request, 'Rekomender/home.html', context)
