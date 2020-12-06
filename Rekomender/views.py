@@ -98,7 +98,7 @@ def create(request):
                 answers.remove(answer)
         for answer in answers:
             if answer[0] == "":
-                answers.remove(answer)  # robione dwa reazy dla pewności, jedno przejście nie usuwa ostatniego
+                answers.remove(answer)  # robione dwa reazy dla pewności, jedno przejście nie usuwa ostatniego 
         sample = QuestionChoices() 
 
         sample.info = createQuestion(question, answers)
