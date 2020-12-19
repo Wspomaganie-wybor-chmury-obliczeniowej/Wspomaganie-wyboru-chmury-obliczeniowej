@@ -13,7 +13,7 @@ def base(request):
 
 def erase_questions():
     QuestionChoices.objects.all().delete()
-    UserQuestions.objects.all().delete()
+    #UserQuestions.objects.all().delete()
     #IdentifyUserQuestions.objects.all().delete()
 def home(request):
     #erase_questions()
@@ -121,8 +121,8 @@ def identyfyUser(request, question_id):
             answer = json_data['question'][0]['Choices'][0]['text']
             #answer = request.POST.get('question')
             print(type(answer))
-        print("answer: ", answer)
-        print(type(answer))
+        # print("answer: ", answer)
+        # print(type(answer))
         if 'next' or 'pomin' in request.POST:
             next_question_id = int(question_id) + 1
             if next_question_id >= len(list_object):
@@ -155,14 +155,14 @@ def questionnaire(request, question_id):
         request.session['selectedChoices']
     except:
         request.session['selectedChoices'] = ""
-    print('Amazon: ', request.session['amazon'])
-    print('microsoft: ', request.session['microsoft'])
-    print('google: ', request.session['google'])
-    print('krajowa: ', request.session['krajowa'])
-    print('ibm: ', request.session['ibm'])
-    print('city: ', request.session['city'])
-    print('task: ', request.session['task'])
-    print(request.session['selectedChoices'])
+    # print('Amazon: ', request.session['amazon'])
+    # print('microsoft: ', request.session['microsoft'])
+    # print('google: ', request.session['google'])
+    # print('krajowa: ', request.session['krajowa'])
+    # print('ibm: ', request.session['ibm'])
+    # print('city: ', request.session['city'])
+    # print('task: ', request.session['task'])
+    # print(request.session['selectedChoices'])
     list_object = []
     json_data_from_db = QuestionChoices.objects.all()
     for item in json_data_from_db:
@@ -197,12 +197,19 @@ def questionnaire(request, question_id):
         for choice in json_data['question'][0]['Choices']:
             if choice['text'] == answer:
                 request.session['amazon'] += (int(choice['weights'][0]['amazon']) * int(multiply_by))
+                print('amazon:',int(choice['weights'][0]['amazon']))
                 request.session['microsoft'] += (int(choice['weights'][0]['microsoft']) * int(multiply_by))
+                print('microfost:',int(choice['weights'][0]['microsoft']))
                 request.session['google'] += (int(choice['weights'][0]['google']) * int(multiply_by))
+                print('google:',int(choice['weights'][0]['google']))
                 request.session['krajowa'] += (int(choice['weights'][0]['krajowa']) * int(multiply_by))
+                print('krajowa:',int(choice['weights'][0]['krajowa']))
                 request.session['ibm'] += (int(choice['weights'][0]['ibm']) * int(multiply_by))
+                print('ibm:',int(choice['weights'][0]['ibm']))
                 request.session['city'] += (int(choice['weights'][0]['city']) * int(multiply_by))
+                print('city:',int(choice['weights'][0]['city']))
                 request.session['task'] += (int(choice['weights'][0]['task']) * int(multiply_by))
+                print('task:',int(choice['weights'][0]['task']))
                 if multiply_by == 0:
                     request.session['selectedChoices'] += "pominiete" + "##"
                 else:
